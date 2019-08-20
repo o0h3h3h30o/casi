@@ -63,6 +63,8 @@ class User extends BaseController
     }
 
 
+
+
     /**
      * This function is used to load the user list
      */
@@ -77,17 +79,106 @@ class User extends BaseController
         }
         else
         {        
-            $hu_tx = $this->user_model->getKeyConfig('dw_tx');
-           
-            $data['dw_tx'] = $hu_tx->value;
 
+            $hu_tx = $this->user_model->getKeyConfig('dw_tx');
             
+            $data['dw_tx'] = $hu_tx->value;
+            
+
+            $this->load->library('pagination');
+            
+            $count = $this->user_model->logsListingCount();
+
+            $returns = $this->paginationCompress ( "config/", $count, 10 );
+
+
+            $data['logsRecords'] = $this->user_model->logsListing($returns["page"], $returns["segment"]);
+
             $this->global['pageTitle'] = 'Cập nhật thông tin hũ tài xỉu';
             
             $this->loadViews("log_tx", $this->global, $data, NULL);
         }
     }
 
+    function config_bottx()
+    {
+        if($this->isAdmin() != TRUE)
+        {         
+            $this->loadThis();
+        }
+        else{
+            $dw_tx = $this->security->xss_clean($this->input->post('dw_tx'));
+            $note = $this->security->xss_clean($this->input->post('note'));
+            $hu_tx = $this->user_model->getKeyConfig('dw_tx');
+            $hu_ao = $hu_tx->value;
+            // var_dump(expression)
+            //lệch = sau - trước
+            $lech = $dw_tx-$hu_ao;
+            // $timechange = time();
+            $current_tx = $hu_tx->value;
+
+            $log_info = array(
+                'gold_before' => $hu_ao,
+                'gold_after' => $dw_tx,
+                'gold_change' => $lech,
+                'time_change' => time(),
+                'note' => $note,
+            );//addNewLog
+            $this->load->model('user_model');
+            $result = $this->user_model->addNewLog($log_info);
+            
+
+            //update config
+            $config = array(
+                'value' => $lech
+            );
+            $this->user_model->updateConfigByxKey($config, 'jar_tx');
+
+            if($result > 0)
+            {
+                $this->session->set_flashdata('success', 'Thay đổi thông số hũ ảo thành công');
+            }
+            else
+            {
+                $this->session->set_flashdata('error', 'Thất bại');
+            }
+            
+            redirect('config');
+        }
+    }
+
+
+    function list_config()
+    {
+        // var_dump($this->isAdmin());
+        // die();
+        if($this->isAdmin() != TRUE)
+        {
+            
+            $this->loadThis();
+        }
+        else
+        {        
+
+            $hu_tx = $this->user_model->getKeyConfig('dw_tx');
+            
+            $data['dw_tx'] = $hu_tx->value;
+            
+
+            $this->load->library('pagination');
+            
+            $count = $this->user_model->logsListingCount();
+
+            $returns = $this->paginationCompress ( "config/", $count, 10 );
+
+
+            $data['logsRecords'] = $this->user_model->logsListing($returns["page"], $returns["segment"]);
+
+            $this->global['pageTitle'] = 'Cập nhật thông tin hũ tài xỉu';
+            
+            $this->loadViews("log_tx", $this->global, $data, NULL);
+        }
+    }
 
     function signin($username, $password)
     {

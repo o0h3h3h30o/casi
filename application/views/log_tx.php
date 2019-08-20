@@ -8,10 +8,24 @@
     </section>
     <section class="content">
         <div class="row">
-            <div class="col-xs-6 text-right">
-                
+            <div class="col-xs-4">
+                <form action="<?php echo base_url() ?>config_bottx" method="POST">
+                    <div class="form-group">
+                    <label for="exampleInputEmail1">Giá trị hũ cập nhật</label>
+                    <input type="number" class="form-control" id="dw_tx" name="dw_tx" placeholder="Nhập giá trị mới của hũ ảo tài xỉu">
+
+                    </div>
+                    <div class="form-group">
+                    <label for="exampleInputEmail1">Lý do cập nhật</label>
+                    <input type="text" class="form-control" id="note" name="note" placeholder="Lý do thay đổi">
+
+                    </div>
+                 
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
             </div>
         </div>
+        <hr>
         <div class="row">
             <div class="col-xs-12">
               <div class="box">
@@ -32,15 +46,17 @@
                       
                     </tr>
                     <?php
-                    if(!empty($rs_tai))
+                    if(!empty($logsRecords))
                     {
-                        foreach($rs_tai as $record)
+                        foreach($logsRecords as $record)
                         {
                     ?>
                     <tr>
-                        <td><?php echo $record->username ?></td>
-                        <td><?php echo number_format($record->tai_real); ?></td>
-                        <td><?php echo $record->log_time; ?></td>
+                        <td><?php echo $record->time_change_2 ?></td>
+                        <td><?php echo number_format($record->gold_change); ?></td>
+                        <td><?php echo number_format($record->gold_before); ?></td>
+                        <td><?php echo number_format($record->gold_after); ?></td>
+                      
                         
                     </tr>
                     <?php
@@ -57,7 +73,35 @@
                 </div>
               </div><!-- /.box -->
             </div>
-             
+             <div class="col-md-4">
+                <?php
+                    $this->load->helper('form');
+                    $error = $this->session->flashdata('error');
+                    if($error)
+                    {
+                ?>
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <?php echo $this->session->flashdata('error'); ?>                    
+                </div>
+                <?php } ?>
+                <?php  
+                    $success = $this->session->flashdata('success');
+                    if($success)
+                    {
+                ?>
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <?php echo $this->session->flashdata('success'); ?>
+                </div>
+                <?php } ?>
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <?php echo validation_errors('<div class="alert alert-danger alert-dismissable">', ' <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button></div>'); ?>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 </div>

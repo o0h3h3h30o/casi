@@ -409,6 +409,58 @@ class User_model extends CI_Model
         return $query->num_rows();
     }
     
+    function addNewLog($logs)
+    {
+        $this->db->trans_start();
+        $this->db->insert('tbl_dw_logs', $logs);
+        
+        $insert_id = $this->db->insert_id();
+        
+        $this->db->trans_complete();
+        
+        return $insert_id;
+    }
+
+    function updateConfigByxKey($config_info, $xkey){
+        $this->db->where('xkey', $xkey);
+        $this->db->update('tbl_config', $config_info);
+        
+        return TRUE;
+    }
+
+    function updateConfigById($config_info, $id){
+        $this->db->where('id', $id);
+        $this->db->update('tbl_config', $config_info);
+        
+        return TRUE;
+    }
+
+    //lịch sử thay đổi hũ
+    function logsListingCount()
+    {
+        $this->db->select('id');
+        $this->db->from('tbl_dw_logs');                
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+    
+    /**
+     * This function is used to get the user listing count
+     * @param string $searchText : This is optional search text
+     * @param number $page : This is pagination offset
+     * @param number $segment : This is pagination limit
+     * @return array $result : This is result
+     */
+    function logsListing($page, $segment)
+    {
+        $this->db->select('*');
+        $this->db->from('tbl_dw_logs');        
+        $this->db->order_by('id', 'DESC');
+        $this->db->limit($page, $segment);
+        $query = $this->db->get();
+        $result = $query->result();        
+        return $result;
+    }
 }
 
   
