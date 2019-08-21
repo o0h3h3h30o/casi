@@ -66,6 +66,7 @@
                         </td>
                         
                         <td class="text-center">
+                            <a class="btn btn-sm btn-primary" href="<?= base_url().'addGold/'.$record->id; ?>" title="Thêm tiền"><i class="fa fa-plus"></i></a>
                             <a class="btn btn-sm btn-primary" href="<?= base_url().'login-history/'.$record->id; ?>" title="Login history"><i class="fa fa-history"></i></a>
                             <a class="btn btn-sm btn-info" href="<?php echo base_url().'editOld/'.$record->id; ?>" title="Edit"><i class="fa fa-pencil"></i></a>
                             <a class="btn btn-sm btn-danger deleteUser" href="#" data-userid="<?php echo $record->id; ?>" title="Delete"><i class="fa fa-trash"></i></a>

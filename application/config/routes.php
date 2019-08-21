@@ -78,6 +78,7 @@ $route['editOld'] = "user/editOld";
 $route['editOld/(:num)'] = "user/editOld/$1";
 $route['editConfig/(:num)'] = "user/editConfig/$1";
 $route['editUser'] = "user/editUser";
+$route['update_gold'] = "user/update_gold";
 $route['updateConfig'] = "user/updateConfig";
 $route['deleteUser'] = "user/deleteUser";
 $route['profile'] = "user/profile";
@@ -94,6 +95,7 @@ $route['checkEmailExists'] = "user/checkEmailExists";
 $route['checkUsername'] = "user/checkUsernamelExists";
 $route['login-history'] = "user/loginHistoy";
 $route['login-history/(:num)'] = "user/loginHistoy/$1";
+$route['addGold/(:num)'] = "user/addGold/$1";
 $route['login-history/(:num)/(:num)'] = "user/loginHistoy/$1/$2";
 
 $route['forgotPassword'] = "login/forgotPassword";

@@ -583,11 +583,11 @@ class User extends BaseController
      */
     function profile($active = "details")
     {
-        $data["userInfo"] = $this->user_model->getUserInfoWithRole($this->vendorId);
-        $data["active"] = $active;
+        // $data["userInfo"] = $this->user_model->getUserInfoWithRole($this->vendorId);
+        // $data["active"] = $active;
         
-        $this->global['pageTitle'] = $active == "details" ? 'CodeInsect : My Profile' : 'CodeInsect : Change Password';
-        $this->loadViews("profile", $this->global, $data, NULL);
+        // $this->global['pageTitle'] = $active == "details" ? 'CodeInsect : My Profile' : 'CodeInsect : Change Password';
+        // $this->loadViews("profile", $this->global, $data, NULL);
     }
 
     /**
@@ -596,38 +596,38 @@ class User extends BaseController
      */
     function profileUpdate($active = "details")
     {
-        $this->load->library('form_validation');
+        // $this->load->library('form_validation');
             
-        $this->form_validation->set_rules('fname','Full Name','trim|required|max_length[128]');
-        $this->form_validation->set_rules('mobile','Mobile Number','required|min_length[10]');
-        $this->form_validation->set_rules('email','Email','trim|required|valid_email|max_length[128]|callback_emailExists');        
+        // $this->form_validation->set_rules('fname','Full Name','trim|required|max_length[128]');
+        // $this->form_validation->set_rules('mobile','Mobile Number','required|min_length[10]');
+        // $this->form_validation->set_rules('email','Email','trim|required|valid_email|max_length[128]|callback_emailExists');        
         
-        if($this->form_validation->run() == FALSE)
-        {
-            $this->profile($active);
-        }
-        else
-        {
-            $name = ucwords(strtolower($this->security->xss_clean($this->input->post('fname'))));
-            $mobile = $this->security->xss_clean($this->input->post('mobile'));
-            $email = strtolower($this->security->xss_clean($this->input->post('email')));
+        // if($this->form_validation->run() == FALSE)
+        // {
+        //     $this->profile($active);
+        // }
+        // else
+        // {
+        //     $name = ucwords(strtolower($this->security->xss_clean($this->input->post('fname'))));
+        //     $mobile = $this->security->xss_clean($this->input->post('mobile'));
+        //     $email = strtolower($this->security->xss_clean($this->input->post('email')));
             
-            $userInfo = array('name'=>$name, 'email'=>$email, 'mobile'=>$mobile, 'updatedBy'=>$this->vendorId, 'updatedDtm'=>date('Y-m-d H:i:s'));
+        //     $userInfo = array('name'=>$name, 'email'=>$email, 'mobile'=>$mobile, 'updatedBy'=>$this->vendorId, 'updatedDtm'=>date('Y-m-d H:i:s'));
             
-            $result = $this->user_model->editUser($userInfo, $this->vendorId);
+        //     $result = $this->user_model->editUser($userInfo, $this->vendorId);
             
-            if($result == true)
-            {
-                $this->session->set_userdata('name', $name);
-                $this->session->set_flashdata('success', 'Profile updated successfully');
-            }
-            else
-            {
-                $this->session->set_flashdata('error', 'Profile updation failed');
-            }
+        //     if($result == true)
+        //     {
+        //         $this->session->set_userdata('name', $name);
+        //         $this->session->set_flashdata('success', 'Profile updated successfully');
+        //     }
+        //     else
+        //     {
+        //         $this->session->set_flashdata('error', 'Profile updation failed');
+        //     }
 
-            redirect('profile/'.$active);
-        }
+        //     redirect('profile/'.$active);
+        // }
     }
 
     /**
@@ -698,7 +698,7 @@ class User extends BaseController
     }
 
     //caapj nhat cau hinh
-        function updateConfig()
+    function updateConfig()
     {
         if($this->isAdmin() != TRUE)
         {
@@ -733,6 +733,73 @@ class User extends BaseController
             }
             
             redirect('list_config');
+        }
+        
+    }
+
+    function addGold($userId)
+    {
+        if($this->isAdmin() != TRUE)
+        {
+            $this->loadThis();
+        }
+        else
+        {
+            if($userId == null)
+            {
+                redirect('userListing');
+            }
+            
+            // $data['roles'] = $this->user_model->getUserRoles();
+            $data['userInfo'] = $this->user_model->getUserInfo($userId);
+
+            $this->global['pageTitle'] = 'Cap nhật thông tin người dùng';
+            
+            $this->loadViews("addGold", $this->global, $data, NULL);
+        }
+    }
+
+    function update_gold()
+    {
+        if($this->isAdmin() != TRUE)
+        {
+            $this->loadThis();
+        }
+        else
+        {
+            $this->load->library('form_validation');
+            
+            $userId = $this->input->post('userId');
+            $username = $this->input->post('username');
+            $gold_update = $this->input->post('gold_update');
+                        
+            $flushObj = array(
+                'username' => $username,
+                'flush_type' => 'GOLD',
+                'value' => $gold_update
+            );
+            
+            // $value = $this->security->xss_clean($this->input->post('value'));
+            
+            
+            // $config_info = array(
+            //     'value' => $value,
+            // );
+            
+            $this->load->model('user_model');
+            
+            $result = $this->user_model->updateGold($flushObj);
+            
+            if($result == true)
+            {
+                $this->session->set_flashdata('success', 'User updated successfully');
+            }
+            else
+            {
+                $this->session->set_flashdata('error', 'User updation failed');
+            }
+            
+            redirect('userListing');
         }
         
     }

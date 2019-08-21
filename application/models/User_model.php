@@ -480,6 +480,18 @@ class User_model extends CI_Model
         $result = $query->result();        
         return $result;
     }
+
+    function updateGold($logs)
+    {
+        $this->db->trans_start();
+        $this->db->insert('server_flush', $logs);
+        
+        $insert_id = $this->db->insert_id();
+        
+        $this->db->trans_complete();
+        
+        return $insert_id;
+    }
 }
 
   
