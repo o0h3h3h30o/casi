@@ -106,15 +106,24 @@
                 <i class="fa fa-dashboard"></i> <span>Dashboard</span></i>
               </a>
             </li>
-        
-            <?php
-            if($role == ROLE_ADMIN || $role == ROLE_MANAGER)
-            {
-            ?>
+            <li>
+              <a href="<?php echo base_url(); ?>dashboard">
+                <i class="fa fa-dashboard"></i> <span>Giao dịch</span></i>
+              </a>
+            </li>
+             <li>
+              <a href="<?php echo base_url(); ?>dashboard">
+                <i class="fa fa-dashboard"></i> <span>Nạp thẻ điện thoại</span></i>
+              </a>
+            </li>
+            <li>
+              <a href="<?php echo base_url(); ?>dashboard">
+                <i class="fa fa-dashboard"></i> <span>Đổi thuởng</span></i>
+              </a>
+            </li>
            
             <?php
-            }
-            if($role == ROLE_ADMIN || $role == ROLE_MANAGER)
+            if($role == ROLE_ADMIN)
             {
             ?>
             <li>
@@ -157,17 +166,12 @@
               </a>
             </li>  
             <li>
-              <a href="#" >
+              <a href="<?php echo base_url(); ?>list_config" >
                 <i class="fa fa-money-o"></i>
-                <span>Thông tin hũ Minigame</span>
+                <span>Cập nhật nhanh Config</span>
               </a>
             </li>
-            <li>
-              <a href="#" >
-                <i class="fa fa-money-o"></i>
-                <span>Cheat Nổ hũ</span>
-              </a>
-            </li>            
+                   
           </ul>
         </section>
         <!-- /.sidebar -->

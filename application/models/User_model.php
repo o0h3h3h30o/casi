@@ -45,6 +45,15 @@ class User_model extends CI_Model
         return $query->row();
     }
 
+    function getKeyConfigById($id = 0){
+         $this->db->select('*');
+        $this->db->from('tbl_config');
+        $this->db->where('id', $id);
+        $query = $this->db->get();
+        
+        return $query->row();
+    }
+
     function dailyListingCount($searchText = '')
     {
         $this->db->select('BaseTbl.id, BaseTbl.username, BaseTbl.nickname, BaseTbl.phone, BaseTbl.gold, BaseTbl.user_type');
@@ -457,6 +466,16 @@ class User_model extends CI_Model
         $this->db->from('tbl_dw_logs');        
         $this->db->order_by('id', 'DESC');
         $this->db->limit($page, $segment);
+        $query = $this->db->get();
+        $result = $query->result();        
+        return $result;
+    }
+
+
+    function configListing()
+    {
+        $this->db->select('*');
+        $this->db->from('tbl_config');        
         $query = $this->db->get();
         $result = $query->result();        
         return $result;

@@ -165,43 +165,21 @@ class User extends BaseController
             $data['dw_tx'] = $hu_tx->value;
             
 
-            $this->load->library('pagination');
+            // $this->load->library('pagination');
             
-            $count = $this->user_model->logsListingCount();
+            // $count = $this->user_model->configListing();
 
-            $returns = $this->paginationCompress ( "config/", $count, 10 );
+            // $returns = $this->paginationCompress ( "config/", $count, 10 );
 
 
-            $data['logsRecords'] = $this->user_model->logsListing($returns["page"], $returns["segment"]);
+            $data['logsRecords'] = $this->user_model->configListing();
 
-            $this->global['pageTitle'] = 'Cập nhật thông tin hũ tài xỉu';
+            $this->global['pageTitle'] = 'Thông số cấu hình toàn hệ thống';
             
-            $this->loadViews("log_tx", $this->global, $data, NULL);
+            $this->loadViews("list_config", $this->global, $data, NULL);
         }
     }
 
-    function signin($username, $password)
-    {
-        echo "1";die();
-        // var_dump($this->isAdmin());
-        // die();
-        // if($this->isAdmin() != TRUE)
-        // {
-            
-        //     $this->loadThis();
-        // }
-        // else
-        // {        
-        //     $hu_tx = $this->user_model->getKeyConfig('dw_tx');
-           
-        //     $data['dw_tx'] = $hu_tx->value;
-
-            
-        //     $this->global['pageTitle'] = 'Cập nhật thông tin hũ tài xỉu';
-            
-        //     $this->loadViews("log_tx", $this->global, $data, NULL);
-        // }
-    }
 
     //thoong tin logs
     function logs()
@@ -436,6 +414,30 @@ class User extends BaseController
             $this->global['pageTitle'] = 'Cap nhật thông tin người dùng';
             
             $this->loadViews("editOld", $this->global, $data, NULL);
+        }
+    }
+
+    function editConfig($configId = NULL)
+    {
+        
+        // echo $configId;die();
+        if($this->isAdmin() != TRUE)
+        {
+            $this->loadThis();
+        }
+        else
+        {
+            if($configId == null)
+            {
+                redirect('list_config');
+            }
+            
+            $data['config_info'] = $this->user_model->getKeyConfigById($configId);
+            // echo "<pre>";
+            // print_r($data['config_info']);die();
+            $this->global['pageTitle'] = 'Cap nhật giá trị config';
+            
+            $this->loadViews("editConfig", $this->global, $data, NULL);
         }
     }
     
@@ -694,6 +696,47 @@ class User extends BaseController
 
         return $return;
     }
+
+    //caapj nhat cau hinh
+        function updateConfig()
+    {
+        if($this->isAdmin() != TRUE)
+        {
+            $this->loadThis();
+        }
+        else
+        {
+            $this->load->library('form_validation');
+            
+            $config_id = $this->input->post('config_id');
+                        
+            
+            
+            $value = $this->security->xss_clean($this->input->post('value'));
+            
+            
+            $config_info = array(
+                'value' => $value,
+            );
+            
+            $this->load->model('user_model');
+            
+            $result = $this->user_model->updateConfigById($config_info, $config_id);
+            
+            if($result == true)
+            {
+                $this->session->set_flashdata('success', 'User updated successfully');
+            }
+            else
+            {
+                $this->session->set_flashdata('error', 'User updation failed');
+            }
+            
+            redirect('list_config');
+        }
+        
+    }
+
 }
 
 ?>
