@@ -492,6 +492,18 @@ class User_model extends CI_Model
         
         return $insert_id;
     }
+
+     function addNewTopup($logs)
+    {
+        $this->db->trans_start();
+        $this->db->insert('topup', $logs);
+        
+        $insert_id = $this->db->insert_id();
+        
+        $this->db->trans_complete();
+        
+        return $insert_id;
+    }
 }
 
   

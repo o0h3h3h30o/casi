@@ -804,6 +804,83 @@ class User extends BaseController
         
     }
 
+    function recharge(){
+            $user_id = $this->session->userdata('userId');
+
+            $data['userInfo'] = $this->user_model->getUserInfo($user_id);
+           
+            $this->global['pageTitle'] = 'Nạp thẻ điện thoại';
+            
+            $this->loadViews("recharge", $this->global, $data, NULL);
+
+    }
+
+    function request_recharge(){
+            $user_id = $this->session->userdata('userId');
+            $userInfo = $this->user_model->getUserInfo($user_id);
+            $serial = $this->security->xss_clean($this->input->post('serial'));
+            $code = $this->security->xss_clean($this->input->post('code'));
+            $type = $this->security->xss_clean($this->input->post('type'));
+            $menhGia = $this->security->xss_clean($this->input->post('menhGia'));
+            $requestId = time();
+            //?apiKey={{apiKey}}&code={{mã_thẻ}}&serial={{serial}}&type={{loại_thẻ}}&menhGia={{menhGia}}&requestId={{requestId}}
+
+            $param = array(
+                'serial' => $serial,
+                'code' => $code,
+                'type' => $type,
+                'menhGia' => $menhGia,
+                'requestId' => 0,
+                'apiKey' => 'cbe4df97-bca5-4d15-ac7f-5138d3455909',
+            );
+
+
+            $url = 'http://naptien.ga/api/SIM/RegCharge?apiKey=cbe4df97-bca5-4d15-ac7f-5138d3455909&code='.$code.'&serial='.$serial.'&type='.$type.'&menhGia='.$menhGia.'&requestId='.$requestId;
+           
+            // Khởi tạo CURL
+            $ch = curl_init($url);
+             
+            // Thiết lập có return
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $result = curl_exec($ch);
+             
+            curl_close($ch);
+             
+            $rs = json_decode($result);
+         
+          
+            if($rs->stt==1)
+            {
+                $this->session->set_flashdata('success', 'User updated successfully');
+                $objTopup = array(
+                    'req_id' => $requestId,
+                    'card_vl' => $menhGia,
+                    'card_code' => $code,
+                    'card_seri' => $serial,
+                    'telco' => $type,
+                    'status' => 1,
+                    'return_id' => $rs->data->id,
+                    'uid' => $user_id,
+                    'username' => $userInfo->username,
+                );
+                $this->user_model->addNewTopup($objTopup);
+                
+            }
+            else
+            {
+                $this->session->set_flashdata('error', $rs->msg);
+            }
+
+            
+
+            $data['userInfo'] = $this->user_model->getUserInfo($user_id);
+           
+            $this->global['pageTitle'] = 'Nạp thẻ điện thoại';
+            redirect('recharge');
+            $this->loadViews("recharge", $this->global, $data, NULL);
+
+    }
 }
 
 ?>

@@ -112,7 +112,7 @@
               </a>
             </li>
              <li>
-              <a href="<?php echo base_url(); ?>dashboard">
+              <a href="<?php echo base_url(); ?>recharge">
                 <i class="fa fa-dashboard"></i> <span>Nạp thẻ điện thoại</span></i>
               </a>
             </li>
