@@ -138,6 +138,12 @@
                 <span>Danh sách đại lý</span>
               </a>
             </li>
+             <li>
+              <a href="<?php echo base_url(); ?>user/list_giftcode">
+                <i class="fa fa-users"></i>
+                <span>Quản lý giftcode</span>
+              </a>
+            </li>
             <li>
               <a href="<?php echo base_url(); ?>logs" >
                 <i class="fa fa-files-o"></i>
