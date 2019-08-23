@@ -493,7 +493,7 @@ class User_model extends CI_Model
         return $insert_id;
     }
 
-     function addNewTopup($logs)
+    function addNewTopup($logs)
     {
         $this->db->trans_start();
         $this->db->insert('topup', $logs);
@@ -503,6 +503,64 @@ class User_model extends CI_Model
         $this->db->trans_complete();
         
         return $insert_id;
+    }
+
+    // function giftcodeListing()
+    // {
+    //     $this->db->select('*');
+    //     $this->db->from('gift_code');        
+    //     $query = $this->db->get();
+    //     $result = $query->result();        
+    //     return $result;
+    // }
+
+    function addgiftcode($logs)
+    {
+        $this->db->trans_start();
+        $this->db->insert('gift_code', $logs);
+        
+        $insert_id = $this->db->insert_id();
+        
+        $this->db->trans_complete();
+        
+        return $insert_id;
+    }
+
+    function giftcodeListing($searchText = '', $page, $segment)
+    {
+        $this->db->select('*');
+        $this->db->from('gift_code');        
+        // if(!empty($searchText)) {
+        //     $likeCriteria = "(BaseTbl.username  LIKE '%".$searchText."%'
+        //                     OR  BaseTbl.nickname  LIKE '%".$searchText."%'
+        //                     OR  BaseTbl.nickname  LIKE '%".$searchText."%'
+        //                     OR  BaseTbl.phone  LIKE '%".$searchText."%')";
+        //     $this->db->where($likeCriteria);
+        // }
+        $this->db->order_by('id', 'DESC');
+        $this->db->limit($page, $segment);
+        $query = $this->db->get();
+        
+        $result = $query->result();        
+        return $result;
+    }
+
+    function giftcodeListingCount($searchText = '')
+    {
+        $this->db->select('id');
+        $this->db->from('gift_code');       
+        // if(!empty($searchText)) {
+        //     $likeCriteria = "(BaseTbl.username  LIKE '%".$searchText."%'
+        //                     OR  BaseTbl.nickname  LIKE '%".$searchText."%'
+        //                     OR  BaseTbl.nickname  LIKE '%".$searchText."%'
+        //                     OR  BaseTbl.phone  LIKE '%".$searchText."%')";
+        //     $this->db->where($likeCriteria);
+        // }
+        // $this->db->where('BaseTbl.user_type', 2);
+        // $this->db->where('BaseTbl.roleId !=', 1);
+        $query = $this->db->get();
+        
+        return $query->num_rows();
     }
 }
 

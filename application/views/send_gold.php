@@ -4,6 +4,7 @@ $username = $userInfo->username;
 $nickname = $userInfo->nickname;
 $store_title = $userInfo->store_title;
 $phone = $userInfo->phone;
+$gold = $userInfo->gold;
 $roleId = $userInfo->user_type;
 $location = $userInfo->location;
 ?>
@@ -12,8 +13,8 @@ $location = $userInfo->location;
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        <i class="fa fa-users"></i> Thông tin người dùng
-        <small>Add / Edit User</small>
+        <i class="fa fa-users"></i> Chuyển tiền cho người chơi
+        <small></small>
       </h1>
     </section>
     
@@ -46,72 +47,25 @@ $location = $userInfo->location;
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="nickname">Tên hiển thị</label>
-                                        <input type="text" class="form-control" id="nickname" placeholder="Enter nickname" name="nickname" value="<?php echo $nickname; ?>" maxlength="128">
+                                        <input type="text" class="form-control" id="nickname" readonly="true" placeholder="Enter nickname" name="nickname" value="<?php echo $nickname; ?>" maxlength="128">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">                                
                                     <div class="form-group">
-                                        <label for="fname">Tên đại lý</label>
-                                        <input type="text" class="form-control" id="store_title"  placeholder="Hiển thị đại lý" name="store_title" value="<?php echo $store_title; ?>" maxlength="128">
-                                        
+                                        <label for="username">Gold hiện tại</label>
+                                        <input type="text" class="form-control" id="user_gold" readonly="true" placeholder="Tên đăng nhập" name="username" value="<?php echo $gold; ?>" maxlength="128">
+                                        <input type="hidden" value="<?php echo $userId; ?>" name="userId" id="userId" />    
                                     </div>
                                     
                                 </div>
-                                
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">                                
-                                    <div class="form-group">
-                                        <label for="fname">Khu vực</label>
-                                        <input type="text" class="form-control" id="location"  placeholder="Khu vực" name="location" value="<?php echo $location; ?>" maxlength="128">
-                                        
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="password">Mật khẩu</label>
-                                        <input type="password" class="form-control" id="password" placeholder="Password" name="password" maxlength="20">
+                                        <label for="nickname">Gold muốn chuyển</label>
+                                        <input type="number" class="form-control" id="gold_send"  placeholder="" name="gold_send" value="" maxlength="128">
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="cpassword">Confirm Password</label>
-                                        <input type="password" class="form-control" id="cpassword" placeholder="Confirm Password" name="cpassword" maxlength="20">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="phone">Mobile Number</label>
-                                        <input type="text" class="form-control" id="phone" placeholder="Mobile Number" name="phone" value="<?php echo $phone; ?>" maxlength="10">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="role">Role</label>
-                                        <select class="form-control" id="role" name="role">
-                                            <option value="0">Select Role</option>
-                                            <?php
-                                            if(!empty($roles))
-                                            {
-                                                foreach ($roles as $rl)
-                                                {
-                                                    ?>
-                                                    <option value="<?php echo $rl->roleId ?>" <?php if($rl->roleId == $roleId) {echo "selected=selected";} ?>><?php echo $rl->role ?></option>
-                                                    <?php
-                                                }
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>    
                             </div>
                         </div><!-- /.box-body -->
     

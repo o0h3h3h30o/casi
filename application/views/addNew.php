@@ -69,7 +69,13 @@
                                 </div>
                             </div>
                             <div class="row">
-                               
+                               <div class="col-md-6">                                
+                                    <div class="form-group">
+                                        <label for="fname">Khu vực</label>
+                                        <input type="text" class="form-control required" value="<?php echo set_value('location'); ?>" id="location" name="location" maxlength="128">
+                                    </div>
+                                    
+                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="role">Tài khoản</label>

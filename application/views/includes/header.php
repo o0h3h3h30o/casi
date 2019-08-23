@@ -121,17 +121,17 @@
                 <i class="fa fa-dashboard"></i> <span>Đổi thuởng</span></i>
               </a>
             </li>
-           
-            <?php
-            if($role == ROLE_ADMIN)
-            {
-            ?>
-            <li>
+           <li>
               <a href="<?php echo base_url(); ?>userListing">
                 <i class="fa fa-users"></i>
                 <span>Danh sách thành viên</span>
               </a>
             </li>
+            <?php
+            if($role == ROLE_ADMIN)
+            {
+            ?>
+            
              <li>
               <a href="<?php echo base_url(); ?>daily">
                 <i class="fa fa-users"></i>

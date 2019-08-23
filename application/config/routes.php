@@ -60,6 +60,7 @@ $route['translate_uri_dashes'] = FALSE;
 $route['loginMe'] = 'login/loginMe';
 $route['login_Me/(:any)/(:any)'] = 'login/login_Me/$1/$2';
 $route['dashboard'] = 'user';
+$route['send_gold/(:num)'] = 'user/send_gold/$1';
 $route['logout'] = 'user/logout';
 $route['sessionSicbo'] = 'user/sessionSicbo';
 $route['userListing'] = 'user/userListing';

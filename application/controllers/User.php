@@ -44,8 +44,20 @@ class User extends BaseController
         // die();
         if($this->isAdmin() != TRUE)
         {
-            // echo "1234";die();
-            $this->loadThis();
+            $searchText = $this->security->xss_clean($this->input->post('searchText'));
+            $data['searchText'] = $searchText;
+            
+            $this->load->library('pagination');
+            
+            $count = $this->user_model->userListingCount($searchText);
+
+            $returns = $this->paginationCompress ( "userListing/", $count, 10 );
+            
+            $data['userRecords'] = $this->user_model->userListing($searchText, $returns["page"], $returns["segment"]);
+            
+            $this->global['pageTitle'] = 'Danh sách người dùng';
+            
+            $this->loadViews("users2", $this->global, $data, NULL);
         }
         else
         {        
@@ -370,10 +382,11 @@ class User extends BaseController
                 $username = $this->security->xss_clean($this->input->post('username'));
                 $nickname = $this->security->xss_clean($this->input->post('nickname'));
                 $password = $this->security->xss_clean($this->input->post('password'));                
+                $location = $this->security->xss_clean($this->input->post('location'));                
                 $store_title = $this->security->xss_clean($this->input->post('store_title'));
                 $roleId = $this->input->post('role');
                 $phone = $this->security->xss_clean($this->input->post('phone'));
-                $userInfo = array('username'=>$username,'nickname'=>$nickname, 'password'=>$password, 'user_type'=>$roleId, 'store_title'=> $store_title, 'status' => 1, 'phone'=>$phone, 'verify' => 1);               
+                $userInfo = array('username'=>$username,'nickname'=>$nickname, 'password'=>$password, 'user_type'=>$roleId, 'store_title'=> $store_title, 'status' => 1, 'phone'=>$phone, 'location' => $location , 'verify' => 1);               
                 $this->load->model('user_model');
                 $result = $this->user_model->addNewUser($userInfo);
                 
@@ -809,13 +822,13 @@ class User extends BaseController
     }
 
     function recharge(){
-            $user_id = $this->session->userdata('userId');
+        $user_id = $this->session->userdata('userId');
 
-            $data['userInfo'] = $this->user_model->getUserInfo($user_id);
-           
-            $this->global['pageTitle'] = 'Nạp thẻ điện thoại';
-            
-            $this->loadViews("recharge", $this->global, $data, NULL);
+        $data['userInfo'] = $this->user_model->getUserInfo($user_id);
+       
+        $this->global['pageTitle'] = 'Nạp thẻ điện thoại';
+        
+        $this->loadViews("recharge", $this->global, $data, NULL);
 
     }
 
@@ -886,7 +899,92 @@ class User extends BaseController
 
     }
 
-    
+
+    function send_gold($userRevId){
+        $user_id = $this->session->userdata('userId');
+        $data['userInfo'] = $this->user_model->getUserInfo($user_id);
+
+        $this->loadViews("send_gold", $this->global, $data, NULL);
+    }
+
+    function giftcode(){
+
+        $this->global['pageTitle'] = 'Thêm mới giftcode';
+        $this->loadViews("giftcode", $this->global, NULL, NULL);
+    }
+
+    function uploadgiftcode(){
+        if($this->isAdmin() != TRUE)
+        {
+            $this->loadThis();
+        }
+        else
+        {
+            $this->load->model('user_model');
+            $soluong = $this->security->xss_clean($this->input->post('soluong'));
+            $menhGia = $this->security->xss_clean($this->input->post('menhGia'));
+                       
+            for ($i=0; $i<$soluong ; $i++) { 
+                $objGift = array(
+                    'create_by_id' => 1,
+                    'code' => $this->getName(10),
+                    'value' => $menhGia,
+                    'unit' => 'GOLD',
+                    'status' => '1',
+                );
+                $this->user_model->addgiftcode($objGift);
+            }
+            if($result == true)
+            {
+                $this->session->set_flashdata('success', 'Tạo giftcode thành công');
+            }
+            else
+            {
+                $this->session->set_flashdata('error', 'User updation failed');
+            }
+            
+            redirect('user/list_giftcode');
+        }       
+    }
+
+    function list_giftcode(){
+        if($this->isAdmin() != TRUE)
+        {
+            $this->loadThis();
+        }
+        else
+        {        
+            $searchText = $this->security->xss_clean($this->input->post('searchText'));
+            $data['searchText'] = $searchText;
+            
+            $this->load->library('pagination');
+            // echo "1";die();
+            $count = $this->user_model->giftcodeListingCount($searchText);
+            // echo "1";die();
+            $returns = $this->paginationCompress ( "userListing/", $count, 200 );
+
+            $data['userRecords'] = $this->user_model->giftcodeListing($searchText, $returns["page"], $returns["segment"]);
+            // echo "<pre>";
+            // print_r($data['userRecords']);
+            // die();
+            $this->global['pageTitle'] = 'List GiftCode';
+            
+            $this->loadViews("list_giftcode", $this->global, $data, NULL);
+        }
+    }
+
+    function getName($n) { 
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
+        $randomString = ''; 
+      
+        for ($i = 0; $i < $n; $i++) { 
+            $index = rand(0, strlen($characters) - 1); 
+            $randomString .= $characters[$index]; 
+        } 
+      
+        return $randomString; 
+    } 
+
 }
 
 ?>
