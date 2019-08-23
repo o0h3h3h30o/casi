@@ -26,9 +26,13 @@ class User extends BaseController
      */
     public function index()
     {
-        $this->global['pageTitle'] = 'CodeInsect : Dashboard';
+        $this->global['pageTitle'] = 'Big686 : Quản lý tài khoản';
         
-        $this->loadViews("dashboard", $this->global, NULL , NULL);
+        $user_id = $this->session->userdata('userId');  
+
+        $data['userInfo'] = $this->user_model->getUserInfo($user_id);
+
+        $this->loadViews("dashboard", $this->global, $data , NULL);
     }
     
     /**
@@ -834,7 +838,7 @@ class User extends BaseController
                 'apiKey' => 'cbe4df97-bca5-4d15-ac7f-5138d3455909',
             );
 
-
+            // $url = 'http://naptien.ga/api/SIM/CheckCharge?apiKey=cbe4df97-bca5-4d15-ac7f-5138d3455909&id=278714';
             $url = 'http://naptien.ga/api/SIM/RegCharge?apiKey=cbe4df97-bca5-4d15-ac7f-5138d3455909&code='.$code.'&serial='.$serial.'&type='.$type.'&menhGia='.$menhGia.'&requestId='.$requestId;
            
             // Khởi tạo CURL
@@ -844,11 +848,11 @@ class User extends BaseController
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
             $result = curl_exec($ch);
-             
+            
             curl_close($ch);
-             
+
             $rs = json_decode($result);
-         
+            
           
             if($rs->stt==1)
             {
@@ -865,7 +869,7 @@ class User extends BaseController
                     'username' => $userInfo->username,
                 );
                 $this->user_model->addNewTopup($objTopup);
-                
+
             }
             else
             {
@@ -881,6 +885,8 @@ class User extends BaseController
             $this->loadViews("recharge", $this->global, $data, NULL);
 
     }
+
+    
 }
 
 ?>
