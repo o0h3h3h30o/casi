@@ -2,15 +2,15 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        <i class="fa fa-users"></i> Quản lý người chơi
-        <small>Add, Edit, Delete</small>
+        <i class="fa fa-users"></i> Danh sách giao dịch
+        <small></small>
       </h1>
     </section>
     <section class="content">
         <div class="row">
             <div class="col-xs-12 text-right">
                 <div class="form-group">
-                    <a class="btn btn-primary" href="<?php echo base_url(); ?>addNew"><i class="fa fa-plus"></i> Add New</a>
+                    <a class="btn btn-primary" href="<?php echo base_url(); ?>user/giftcode"><i class="fa fa-plus"></i> Add New</a>
                 </div>
             </div>
         </div>
@@ -18,14 +18,12 @@
             <div class="col-xs-12">
               <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">Danh sách người chơi</h3>
+                    <h3 class="box-title">Quản lý giao dịch</h3>
                     <div class="box-tools">
                         <form action="<?php echo base_url() ?>userListing" method="POST" id="searchList">
                             <div class="input-group">
-                              <input type="text" name="searchText" value="<?php echo $searchText; ?>" class="form-control input-sm pull-right" style="width: 150px;" placeholder="Search"/>
-                              <div class="input-group-btn">
-                                <button class="btn btn-sm btn-default searchList"><i class="fa fa-search"></i></button>
-                              </div>
+                             
+                              
                             </div>
                         </form>
                     </div>
@@ -34,51 +32,40 @@
                   <table class="table table-hover">
                     <tr>
                         
-                        <th>Tên Hiển thị</th>
-                        <th>Phone</th>
+                        <th>Nickname</th>
                         <th>Gold</th>
-                        <th>Phân loại</th>
+                        <th>Thời gian</th>
+                        <th>Lý do chuyển</th>
+                        <th>Trạng thái</th>
                         
-                        <th class="text-center">Actions</th>
                     </tr>
                     <?php
-                    if(!empty($userRecords))
+                    if (!empty($rs))
                     {
-                        foreach($userRecords as $record)
+                        foreach($rs as $record)
                         {
                     ?>
                     <tr>
+                        <td><?php echo $record->user_recived->nickname; ?></td>
+                      
                         
-                        <td><?php echo $record->nickname ?></td>
-                        <td><?php echo $record->phone ?></td>
-                        <td><?php echo number_format($record->gold); ?></td>
-                        <td><?php 
-                        if($record->user_type ==1){
-                            echo "Member";    
-                        }
-                        if($record->user_type ==2){
-                            echo "Đại lý cấp 1"; 
-                        }
-                        if($record->user_type ==3){
-                            echo "Admin"; 
-                        }
-                        ?>
+                        <td><?php echo number_format($record->amount); ?></td>
+                        
+                        <td><?php echo $record->time; ?></td>
                         </td>
-                        
-                        <td class="text-center">
-                            <a class="btn btn-sm btn-primary" href="<?= base_url().'send_gold/'.$record->id; ?>" title="Chuyển tiền người chơi"><i class="fa fa-plus"></i></a>
-                          
+                        <td><?php echo $record->note; ?></td>
                         </td>
                     </tr>
                     <?php
                         }
                     }
                     ?>
+                   
                   </table>
                   
                 </div><!-- /.box-body -->
                 <div class="box-footer clearfix">
-                    <?php echo $this->pagination->create_links(); ?>
+                    <?php // echo $this->pagination->create_links(); ?>
                 </div>
               </div><!-- /.box -->
             </div>

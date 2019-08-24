@@ -33,37 +33,40 @@ $location = $userInfo->location;
                     </div><!-- /.box-header -->
                     <!-- form start -->
                     
-                    <form role="form" action="<?php echo base_url() ?>editUser" method="post" id="editUser" role="form">
+                    <form role="form" action="<?php echo base_url() ?>addTransactions" method="post" id="editUser" role="form">
                         <div class="box-body">
+                            
                             <div class="row">
                                 <div class="col-md-6">                                
                                     <div class="form-group">
-                                        <label for="username">Tên đăng nhập</label>
-                                        <input type="text" class="form-control" id="username" readonly="true" placeholder="Tên đăng nhập" name="username" value="<?php echo $username; ?>" maxlength="128">
-                                        <input type="hidden" value="<?php echo $userId; ?>" name="userId" id="userId" />    
+                                        <label for="username">Tên hiển thị người nhận</label>
+                                        <input type="text" class="form-control" id="recived_name" readonly="true" placeholder="Tên đăng nhập" name="reciven_name" value="<?php echo $recived->nickname; ?>" maxlength="128">                                          
                                     </div>
                                     
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="nickname">Tên hiển thị</label>
-                                        <input type="text" class="form-control" id="nickname" readonly="true" placeholder="Enter nickname" name="nickname" value="<?php echo $nickname; ?>" maxlength="128">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-6">                                
                                     <div class="form-group">
                                         <label for="username">Gold hiện tại</label>
-                                        <input type="text" class="form-control" id="user_gold" readonly="true" placeholder="Tên đăng nhập" name="username" value="<?php echo $gold; ?>" maxlength="128">
+                                        <input type="text" class="form-control" id="user_gold" readonly="true" placeholder="Tên đăng nhập" name="gold_sender" value="<?php echo number_format($gold); ?>" maxlength="128">
                                         <input type="hidden" value="<?php echo $userId; ?>" name="userId" id="userId" />    
+                                        <input type="hidden" value="<?php echo $recived->id; ?>" name="recived" id="recived" />    
                                     </div>
                                     
                                 </div>
+                               
+                            </div>
+                            <div class="row">
+                                
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="nickname">Gold muốn chuyển</label>
-                                        <input type="number" class="form-control" id="gold_send"  placeholder="" name="gold_send" value="" maxlength="128">
+                                       <input type="text" class="form-control" name="amount" id="currency-field1"  value="" data-type="currency" placeholder="">
+                                    </div>
+                                </div>
+                                 <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="nickname">Lý do chuyển</label>
+                                        <input type="text" class="form-control" id="note"  placeholder="" name="note" value="" maxlength="128">
                                     </div>
                                 </div>
                             </div>
@@ -108,5 +111,3 @@ $location = $userInfo->location;
         </div>    
     </section>
 </div>
-
-<script src="<?php echo base_url(); ?>assets/js/editUser.js" type="text/javascript"></script>

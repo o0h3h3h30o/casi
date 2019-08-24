@@ -79,24 +79,7 @@ class User_model extends CI_Model
      * @param number $segment : This is pagination limit
      * @return array $result : This is result
      */
-    function userListing($searchText = '', $page, $segment)
-    {
-        $this->db->select('BaseTbl.id, BaseTbl.username, BaseTbl.nickname, BaseTbl.phone, BaseTbl.gold, BaseTbl.user_type');
-        $this->db->from('users as BaseTbl');        
-        if(!empty($searchText)) {
-            $likeCriteria = "(BaseTbl.username  LIKE '%".$searchText."%'
-                            OR  BaseTbl.nickname  LIKE '%".$searchText."%'
-                            OR  BaseTbl.nickname  LIKE '%".$searchText."%'
-                            OR  BaseTbl.phone  LIKE '%".$searchText."%')";
-            $this->db->where($likeCriteria);
-        }
-        $this->db->order_by('BaseTbl.id', 'DESC');
-        $this->db->limit($page, $segment);
-        $query = $this->db->get();
-        
-        $result = $query->result();        
-        return $result;
-    }
+   
 
     function dailyListing($searchText = '', $page, $segment)
     {
@@ -118,6 +101,24 @@ class User_model extends CI_Model
         return $result;
     }
     
+    function userListing($searchText = '', $page, $segment)
+    {
+        $this->db->select('BaseTbl.id, BaseTbl.username, BaseTbl.nickname, BaseTbl.phone, BaseTbl.gold, BaseTbl.user_type');
+        $this->db->from('users as BaseTbl');        
+        if(!empty($searchText)) {
+            $likeCriteria = "(BaseTbl.username  LIKE '%".$searchText."%'
+                            OR  BaseTbl.nickname  LIKE '%".$searchText."%'
+                            OR  BaseTbl.nickname  LIKE '%".$searchText."%'
+                            OR  BaseTbl.phone  LIKE '%".$searchText."%')";
+            $this->db->where($likeCriteria);
+        }
+        $this->db->order_by('BaseTbl.id', 'DESC');
+        $this->db->limit($page, $segment);
+        $query = $this->db->get();
+        
+        $result = $query->result();        
+        return $result;
+    }
     /**
      * This function is used to get the user roles information
      * @return array $result : This is result of the query
@@ -562,6 +563,51 @@ class User_model extends CI_Model
         
         return $query->num_rows();
     }
+
+
+    function transListingCount( $userId)
+    {
+        $this->db->select('*');
+        $this->db->from('trans_log');        
+        $this->db->where('sender', $userId);        
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get();        
+        return $query->num_rows();
+    }
+    
+    /**
+     * This function is used to get the user listing count
+     * @param string $searchText : This is optional search text
+     * @param number $page : This is pagination offset
+     * @param number $segment : This is pagination limit
+     * @return array $result : This is result
+     */
+   
+
+    function transListing($userId, $page, $segment)
+    {
+        $this->db->select('*');
+        $this->db->from('trans_log');        
+        $this->db->where('sender', $userId);        
+        $this->db->order_by('id', 'DESC');
+        $this->db->limit($page, $segment);
+        $query = $this->db->get();  
+        $result = $query->result();        
+        return $result;
+    }
+
+    function addLogTrans($logs)
+    {
+        $this->db->trans_start();
+        $this->db->insert('trans_log', $logs);
+        
+        $insert_id = $this->db->insert_id();
+        
+        $this->db->trans_complete();
+        
+        return $insert_id;
+    }
+
 }
 
   

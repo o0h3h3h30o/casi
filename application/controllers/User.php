@@ -136,8 +136,6 @@ class User extends BaseController
             $log_info = array(
                 'gold_before' => $hu_ao,
                 'gold_after' => $dw_tx,
-                'gold_change' => $lech,
-                'time_change' => time(),
                 'note' => $note,
             );//addNewLog
             $this->load->model('user_model');
@@ -490,6 +488,8 @@ class User extends BaseController
             {
                 $username = $this->security->xss_clean($this->input->post('username'));
                 $nickname = $this->security->xss_clean($this->input->post('nickname'));
+                $location = $this->security->xss_clean($this->input->post('location'));
+                $facebook_url = $this->security->xss_clean($this->input->post('facebook_url'));
                 $store_title = $this->security->xss_clean($this->input->post('store_title'));
                 $phone = $this->security->xss_clean($this->input->post('phone'));
                 $password = $this->input->post('password');
@@ -500,11 +500,11 @@ class User extends BaseController
                 
                 if(empty($password))
                 {
-                    $userInfo = array('username'=>$username, 'user_type'=>$roleId, 'nickname'=>$nickname,'store_title'=>$store_title, 'phone'=>$phone,'user_type'=>$roleId, 'phone'=>$phone, );
+                    $userInfo = array('username'=>$username, 'user_type'=>$roleId, 'nickname'=>$nickname, 'location'=>$location, 'facebook_url'=>$facebook_url, 'store_title'=>$store_title, 'phone'=>$phone,'user_type'=>$roleId, 'phone'=>$phone, );
                 }
                 else
                 {
-                    $userInfo = array('nickname'=>$nickname,'username'=>$username, 'password'=>$password, 'user_type'=>$roleId,
+                    $userInfo = array('nickname'=>$nickname,'username'=>$username, 'location'=>$location, 'password'=>$password, 'user_type'=>$roleId,'facebook_url'=>$facebook_url,
                         'username'=>$username, 'store_title'=>$store_title, 'phone'=>$phone );
                 }
                 
@@ -903,7 +903,10 @@ class User extends BaseController
     function send_gold($userRevId){
         $user_id = $this->session->userdata('userId');
         $data['userInfo'] = $this->user_model->getUserInfo($user_id);
+        $this->global['pageTitle'] = 'Chuyển tiền người chơi';
 
+        $recived = $this->user_model->getUserInfo($userRevId);
+        $data['recived'] = $recived;
         $this->loadViews("send_gold", $this->global, $data, NULL);
     }
 
@@ -922,8 +925,8 @@ class User extends BaseController
         {
             $this->load->model('user_model');
             $soluong = $this->security->xss_clean($this->input->post('soluong'));
-            $menhGia = $this->security->xss_clean($this->input->post('menhGia'));
-                       
+            $menhGia = str_replace(',', '', $this->security->xss_clean($this->input->post('menhGia')));
+                  
             for ($i=0; $i<$soluong ; $i++) { 
                 $objGift = array(
                     'create_by_id' => 1,
@@ -964,14 +967,134 @@ class User extends BaseController
             $returns = $this->paginationCompress ( "userListing/", $count, 200 );
 
             $data['userRecords'] = $this->user_model->giftcodeListing($searchText, $returns["page"], $returns["segment"]);
-            // echo "<pre>";
-            // print_r($data['userRecords']);
-            // die();
+          
             $this->global['pageTitle'] = 'List GiftCode';
             
             $this->loadViews("list_giftcode", $this->global, $data, NULL);
         }
     }
+
+    function reward(){
+            
+        $this->global['pageTitle'] = 'Đổi thuởng';
+        // $data_the =
+        $user_id = $this->session->userdata('userId');
+        $data['userInfo'] = $this->user_model->getUserInfo($user_id);
+        $sql = 'SELECT * FROM tbl_reward';
+        $data['rs'] = $this->db->query($sql)->result();
+        
+        $this->loadViews("reward", $this->global, $data, NULL);
+    }
+
+    function transactions(){
+            
+        $this->global['pageTitle'] = 'Danh sách giao dịch';
+        // $data_the =
+        $user_id = $this->session->userdata('userId');
+        $searchText = $this->security->xss_clean($this->input->post('searchText'));
+        $data['searchText'] = $searchText;
+        $count = $this->user_model->transListingCount($user_id);
+        $returns = $this->paginationCompress ( "transactions/", $count, 20);
+      
+        $rs = $this->user_model->transListing($user_id, $returns["page"], $returns["segment"]);
+
+        foreach ($rs as $key => $value) {
+            $rs[$key]->user_recived = $this->user_model->getUserInfo($value->recived);
+        }        
+        $data['rs'] = $rs;
+        $this->loadViews("list_transaction", $this->global, $data, NULL);
+    }
+
+    function recived(){
+            
+        $this->global['pageTitle'] = 'Danh sách giao dịch nhận';
+        // $data_the =
+        $user_id = $this->session->userdata('userId');
+        $searchText = $this->security->xss_clean($this->input->post('searchText'));
+        $data['searchText'] = $searchText;
+        $count = $this->user_model->transListingCount($user_id);
+        $returns = $this->paginationCompress ( "recived/", $count, 20);
+      
+        $rs = $this->user_model->transListing($user_id, $returns["page"], $returns["segment"]);
+
+        foreach ($rs as $key => $value) {
+            $rs[$key]->user_recived = $this->user_model->getUserInfo($value->sender);
+        }        
+        $data['rs'] = $rs;
+        $this->loadViews("list_transaction", $this->global, $data, NULL);
+    }
+
+    function addTransactions(){
+            
+        $this->load->library('form_validation');
+             
+        $userId = $this->session->userdata('userId');
+        $amount = str_replace(',', '', $this->security->xss_clean($this->input->post('amount')));
+        $recived = str_replace(',', '', $this->security->xss_clean($this->input->post('recived')));
+        $note = $this->security->xss_clean($this->input->post('note'));
+        
+        $rs_recived = $this->user_model->getUserInfo($recived);
+        $userInfo = $this->user_model->getUserInfo($userId);
+        $gold_hientai = $userInfo->gold;
+        $chenh = $amount - $gold_hientai;
+        
+        if($chenh>0){
+           
+            $this->session->set_flashdata('error', 'Gold lớn hơn hiện có');
+            redirect('send_gold/'.$recived);
+        }
+        else
+        {
+            //update bang transaction
+            $transObj = array(
+                'sender' => $userId,
+                'recived' => $recived,
+                'amount' => $amount,
+                'status' => 0,
+                'current_amount_sender' => $userInfo->gold,
+                'current_amount_reciver' => $rs_recived->gold,
+                'note' => $note,
+            );
+            $this->user_model->addLogTrans($transObj);
+
+            //Update tieenf nguoi chuyen
+            $flushObj = array(
+                'username' => $userInfo->username,
+                'flush_type' => 'GOLD',
+                'value' => 0-$amount,
+            );
+            $this->user_model->updateGold($flushObj);
+
+            //update gold nguoi nhan
+            $flushObj2 = array(
+                'username' => $rs_recived->username,
+                'flush_type' => 'GOLD',
+                'value' => $amount,
+            );
+            $this->user_model->updateGold($flushObj2);
+            $this->session->set_flashdata('success', 'Chuyen tien thanh cong');
+           redirect('send_gold/'.$recived);
+        }
+        
+        
+        
+        
+        
+        // $result = $this->user_model->editUser($userInfo, $userId);
+        
+        // if($result == true)
+        // {
+        //     $this->session->set_flashdata('success', 'User updated successfully');
+        // }
+        // else
+        // {
+        //     $this->session->set_flashdata('error', 'User updation failed');
+        // }
+        
+        
+        
+    }
+    
 
     function getName($n) { 
         $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'; 

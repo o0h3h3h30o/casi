@@ -42,6 +42,7 @@
                         <th>Giá trị thay đổi</th>
                         <th>Giá trị hũ trước thay đổi</th>
                         <th>Giá trị hũ sau khi thay đổi</th>
+                        <th>Lý do thay đổi</th>
                         
                       
                     </tr>
@@ -53,9 +54,10 @@
                     ?>
                     <tr>
                         <td><?php echo $record->time_change_2 ?></td>
-                        <td><?php echo number_format($record->gold_change); ?></td>
+                        <td><?php echo number_format($record->gold_after - $record->gold_before); ?></td>
                         <td><?php echo number_format($record->gold_before); ?></td>
                         <td><?php echo number_format($record->gold_after); ?></td>
+                        <td><?php echo $recode->note; ?></td>
                       
                         
                     </tr>

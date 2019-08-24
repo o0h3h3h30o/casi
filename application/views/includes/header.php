@@ -107,8 +107,13 @@
               </a>
             </li>
             <li>
-              <a href="<?php echo base_url(); ?>dashboard">
-                <i class="fa fa-dashboard"></i> <span>Giao dịch</span></i>
+              <a href="<?php echo base_url(); ?>transactions">
+                <i class="fa fa-dashboard"></i> <span>Giao dịch gửi</span></i>
+              </a>
+            </li>
+            <li>
+              <a href="<?php echo base_url(); ?>recived">
+                <i class="fa fa-dashboard"></i> <span>Giao dịch nhận</span></i>
               </a>
             </li>
              <li>
@@ -117,7 +122,7 @@
               </a>
             </li>
             <li>
-              <a href="<?php echo base_url(); ?>dashboard">
+              <a href="<?php echo base_url(); ?>reward">
                 <i class="fa fa-dashboard"></i> <span>Đổi thuởng</span></i>
               </a>
             </li>
@@ -150,9 +155,6 @@
                 <span>Lịch sử chơi game</span>
               </a>
             </li>
-            <?php
-            }
-            ?>
             <li>
               <a href="<?php echo base_url(); ?>transactions" >
                 <i class="fa fa-files-o"></i>
@@ -177,6 +179,10 @@
                 <span>Cập nhật nhanh Config</span>
               </a>
             </li>
+            <?php
+            }
+            ?>
+            
                    
           </ul>
         </section>

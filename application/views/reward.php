@@ -6,7 +6,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        <i class="fa fa-users"></i> Tạo giftcode
+        <i class="fa fa-users"></i> Chọn giá trị thẻ cào mà bạn muốn đổi
         <small></small>
       </h1>
     </section>
@@ -22,28 +22,24 @@
                 
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">Nhập số lượng giftcode và giá trị giftcode</h3>
+                        <h3 class="box-title">Chọn thẻ bạn muốn đổi</h3></br>
+                        </br>
+                        <h3 class="box-title" style="color:red;">Số Gold Hiện tại: <?php echo number_format($userInfo->gold); ?></h3>
                     </div><!-- /.box-header -->
                     <!-- form start -->
                     
                     <form role="form" action="<?php echo base_url() ?>user/uploadgiftcode" method="post" id="editUser" role="form">
                         <div class="box-body">
-                            <div class="col-md-6">                                
-                                    <div class="form-group">
-                                        <label for="username">Số lượng</label>
-                                        <input type="number" class="form-control" id="soluong"  placeholder="" name="soluong" value="" maxlength="128">                                         
-                                    </div>
-                                    
-                                </div>
-                                <div class="col-md-6">                                
-                                    <div class="form-group">
-                                        <label for="username">Mệnh giá</label>
-                                        <!-- <input type="number"  id="menhGia" placeholder="" name="menhGia" value="" maxlength="128"> -->
-                                          <input type="text" class="form-control" name="menhGia" id="currency-field"  value="" data-type="currency" placeholder="">                                       
-                                    </div>
-                                    
-                                </div>
-                                
+                        	<select name="product_id" class="form-control"> 
+ 
+
+
+                        	<?php foreach ($rs as $key => $value) { ?>
+                        		
+                        	 <option  value="<?php echo $value->gold; ?>" style="background-image:url(<?php echo base_url() ?>assets/images/<?php echo $value->image; ?>);"><?php echo $value->name; ?> - Giá trị: <?php echo number_format($value->gold); ?> Gold</option>
+                            
+                             <?php } ?>  
+                             </select> 
                         </div>
     
                         <div class="box-footer">

@@ -6,6 +6,7 @@ $store_title = $userInfo->store_title;
 $phone = $userInfo->phone;
 $roleId = $userInfo->user_type;
 $location = $userInfo->location;
+$facebook_url = $userInfo->facebook_url;
 ?>
 
 <div class="content-wrapper">
@@ -66,6 +67,14 @@ $location = $userInfo->location;
                                     <div class="form-group">
                                         <label for="fname">Khu vực</label>
                                         <input type="text" class="form-control" id="location"  placeholder="Khu vực" name="location" value="<?php echo $location; ?>" maxlength="128">
+                                        
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-md-6">                                
+                                    <div class="form-group">
+                                        <label for="fname">Facebook</label>
+                                        <input type="text" class="form-control" id="facebook_url"  placeholder="Link facebook" name="facebook_url" value="<?php echo $facebook_url; ?>" maxlength="128">
                                         
                                     </div>
                                     
