@@ -2,7 +2,9 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        <i class="fa fa-users"></i> Giá trị hũ tài xỉu hiện tại: <b class="red"><?php echo number_format($dw_tx); ?></b>
+        <i class="fa fa-money"></i> Giá trị hũ tài xỉu hiện tại: <b class="red"><?php echo number_format($dw_tx); ?></b><br>
+        <i class="fa fa-arrow-up"></i> Nạp vào: <b class="red"> <?php echo number_format($tienrut); ?></b><br>
+        <i class="fa fa-arrow-down"></i> Rút ra: &nbsp;&nbsp;&nbsp;&nbsp; <b class="red"><?php echo number_format($tiennap); ?></b><br>
         <small></small>
       </h1>
     </section>

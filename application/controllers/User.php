@@ -121,6 +121,14 @@ class User extends BaseController
             $data['dw_tx'] = $hu_tx->value;
             
 
+            //tổng số tiền bơm vào
+            $sql = 'SELECT (SUM(gold_before)-SUM(gold_after)) as tienrut FROM tbl_dw_logs WHERE gold_before > gold_after';
+            $data['tienrut'] = $this->db->query($sql)->row()->tienrut;
+            
+            $sql = 'SELECT (SUM(gold_after)-SUM(gold_before)) as tiennap FROM tbl_dw_logs WHERE gold_after > gold_before';
+            $data['tiennap'] = $this->db->query($sql)->row()->tiennap;
+            
+
             $this->load->library('pagination');
             
             $count = $this->user_model->logsListingCount();
