@@ -396,7 +396,7 @@ class User_model extends CI_Model
 
     function userLogsCount($searchText = '', $game_id)
     {
-        $this->db->select('*');
+        $this->db->select('id');
         $this->db->from('logs');        
         if(!empty($searchText)) {
 
@@ -568,8 +568,21 @@ class User_model extends CI_Model
     function transListingCount( $userId)
     {
         $this->db->select('*');
+        $this->db->from('trans_log');
+        if($userId>0){
+            $this->db->where('sender', $userId);   
+        }    
+             
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get();        
+        return $query->num_rows();
+    }
+
+    function RecListingCount( $userId)
+    {
+        $this->db->select('*');
         $this->db->from('trans_log');        
-        $this->db->where('sender', $userId);        
+        $this->db->where('recived', $userId);        
         $this->db->order_by('id', 'DESC');
         $query = $this->db->get();        
         return $query->num_rows();
@@ -583,12 +596,24 @@ class User_model extends CI_Model
      * @return array $result : This is result
      */
    
-
-    function transListing($userId, $page, $segment)
+    function RecListing($userId, $page, $segment)
     {
         $this->db->select('*');
         $this->db->from('trans_log');        
-        $this->db->where('sender', $userId);        
+        $this->db->where('recived', $userId);        
+        $this->db->order_by('id', 'DESC');
+        $this->db->limit($page, $segment);
+        $query = $this->db->get();  
+        $result = $query->result();        
+        return $result;
+    }
+    function transListing($userId, $page, $segment)
+    {
+        $this->db->select('*');
+        $this->db->from('trans_log');
+        if($userId>0){
+            $this->db->where('sender', $userId);   
+        }            
         $this->db->order_by('id', 'DESC');
         $this->db->limit($page, $segment);
         $query = $this->db->get();  

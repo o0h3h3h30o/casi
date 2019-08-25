@@ -26,15 +26,35 @@ class User extends BaseController
      */
     public function index()
     {
-        $this->global['pageTitle'] = 'Big686 : Quản lý tài khoản';
+        if($this->isAdmin() != TRUE)
+        {
+             $this->loadThis();
+        }else{
+            $this->global['pageTitle'] = 'Big686 : Quản lý tài khoản';
         
-        $user_id = $this->session->userdata('userId');  
-
-        $data['userInfo'] = $this->user_model->getUserInfo($user_id);
-
-        $this->loadViews("dashboard", $this->global, $data , NULL);
+            $user_id = $this->session->userdata('userId');  
+            // tổng tiền user
+            
+            $data['gold_user'] = $this->getGoldByUserType(1);
+            $data['gold_user_deposit'] = $this->getGoldDepositeByUserType(1);
+            $data['gold_daily'] = $this->getGoldByUserType(2);
+            $data['gold_daily_deposit'] = $this->getGoldDepositeByUserType(2);
+            $data['userInfo'] = $this->user_model->getUserInfo($user_id);
+            // $data['']
+            $this->loadViews("dashboard", $this->global, $data , NULL);
+        }
     }
     
+
+    private function getGoldByUserType($user_type){
+        $sql = 'SELECT SUM(gold) as `gold` FROM users WHERE user_type = "'.$user_type.'"';        
+        return $this->db->query($sql)->row()->gold;
+    }
+
+    private function getGoldDepositeByUserType($user_type){
+        $sql = 'SELECT SUM(gold_deposit) as `gold_deposit` FROM users WHERE user_type = "'.$user_type.'"';        
+        return $this->db->query($sql)->row()->gold_deposit;
+    }
     /**
      * This function is used to load the user list
      */
@@ -1005,6 +1025,25 @@ class User extends BaseController
         $this->loadViews("list_transaction", $this->global, $data, NULL);
     }
 
+    function alltransaction(){
+        
+        $this->global['pageTitle'] = 'Danh sách giao dịch toàn hệ thống';
+        
+        $searchText = $this->security->xss_clean($this->input->post('searchText'));
+        $data['searchText'] = $searchText;
+        $count = $this->user_model->transListingCount(0);
+        $returns = $this->paginationCompress ( "transactions/", $count, 20);
+      
+        $rs = $this->user_model->transListing(0, $returns["page"], $returns["segment"]);
+
+        foreach ($rs as $key => $value) {
+            $rs[$key]->user_recived = $this->user_model->getUserInfo($value->recived);
+            $rs[$key]->user_send = $this->user_model->getUserInfo($value->sender);
+        }        
+        $data['rs'] = $rs;
+        $this->loadViews("all_trans", $this->global, $data, NULL);
+    }
+
     function recived(){
             
         $this->global['pageTitle'] = 'Danh sách giao dịch nhận';
@@ -1012,16 +1051,29 @@ class User extends BaseController
         $user_id = $this->session->userdata('userId');
         $searchText = $this->security->xss_clean($this->input->post('searchText'));
         $data['searchText'] = $searchText;
-        $count = $this->user_model->transListingCount($user_id);
+        $count = $this->user_model->RecListingCount($user_id);
         $returns = $this->paginationCompress ( "recived/", $count, 20);
       
-        $rs = $this->user_model->transListing($user_id, $returns["page"], $returns["segment"]);
+        $rs = $this->user_model->RecListing($user_id, $returns["page"], $returns["segment"]);
 
         foreach ($rs as $key => $value) {
             $rs[$key]->user_recived = $this->user_model->getUserInfo($value->sender);
         }        
         $data['rs'] = $rs;
         $this->loadViews("list_transaction", $this->global, $data, NULL);
+    }
+
+    function addthe(){
+         if($this->isAdmin() != TRUE)
+        {
+            $this->loadThis();
+        }
+        else
+        {
+            $this->global['pageTitle'] = 'Thêm thẻ điện thoại';
+            $data = array();
+            $this->loadViews("addthe", $this->global, $data, NULL);
+        }
     }
 
     function addTransactions(){
@@ -1075,22 +1127,6 @@ class User extends BaseController
             $this->session->set_flashdata('success', 'Chuyen tien thanh cong');
            redirect('send_gold/'.$recived);
         }
-        
-        
-        
-        
-        
-        // $result = $this->user_model->editUser($userInfo, $userId);
-        
-        // if($result == true)
-        // {
-        //     $this->session->set_flashdata('success', 'User updated successfully');
-        // }
-        // else
-        // {
-        //     $this->session->set_flashdata('error', 'User updation failed');
-        // }
-        
         
         
     }

@@ -126,12 +126,18 @@
                 <i class="fa fa-dashboard"></i> <span>Đổi thuởng</span></i>
               </a>
             </li>
+            <!-- ROLE_MANAGER -->
+             <?php
+            if($role == ROLE_MANAGER)
+            {
+            ?>
            <li>
               <a href="<?php echo base_url(); ?>userListing">
                 <i class="fa fa-users"></i>
                 <span>Danh sách thành viên</span>
               </a>
             </li>
+          <?php } ?>
             <?php
             if($role == ROLE_ADMIN)
             {
@@ -156,7 +162,7 @@
               </a>
             </li>
             <li>
-              <a href="<?php echo base_url(); ?>transactions" >
+              <a href="<?php echo base_url(); ?>alltransaction" >
                 <i class="fa fa-files-o"></i>
                 <span>Giao dịch trong game</span>
               </a>
