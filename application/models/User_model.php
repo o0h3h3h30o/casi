@@ -546,6 +546,18 @@ class User_model extends CI_Model
         return $result;
     }
 
+    function giftcodeListingExcel()
+    {
+        $this->db->select('*');
+        $this->db->from('gift_code');
+        $this->db->where('status',0);     
+        $this->db->order_by('id', 'DESC');       
+        $query = $this->db->get();
+        
+        $result = $query->result();        
+        return $result;
+    }
+
     function giftcodeListingCount($searchText = '')
     {
         $this->db->select('id');

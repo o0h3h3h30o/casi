@@ -57,7 +57,7 @@
                         <td><?php echo number_format($record->gold_after - $record->gold_before); ?></td>
                         <td><?php echo number_format($record->gold_before); ?></td>
                         <td><?php echo number_format($record->gold_after); ?></td>
-                        <td><?php echo $recode->note; ?></td>
+                        <td><?php echo $record->note; ?></td>
                       
                         
                     </tr>

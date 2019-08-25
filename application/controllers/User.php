@@ -994,6 +994,48 @@ class User extends BaseController
         }
     }
 
+    function excelgiftcode(){
+        if($this->isAdmin() != TRUE)
+        {
+            $this->loadThis();
+        }
+        else
+        {   
+            $filename = 'giftcode.xls';
+            $this->load->model('user_model');
+            header("Content-Type: application/vnd.ms-excel");
+            header("Content-Disposition: attachment; filename=\"$filename\"");
+
+            $data = $this->user_model->giftcodeListingExcel();
+           
+            foreach ($data as $key => $value) {
+                
+                $arr[$key]['code'] = $value->code;
+                $arr[$key]['value'] = $value->value;
+                
+            }
+            $this->ExportFile($arr);
+            exit();
+        }
+    }
+
+    
+
+    private function ExportFile($records) {
+        $heading = false;
+            if(!empty($records))
+              foreach($records as $row) {
+                
+                if(!$heading) {
+                  // display field/column names as a first row
+                  echo implode("\t", array_keys($row)) . "\n";
+                  $heading = true;
+                }
+                echo implode("\t", array_values($row)) . "\n";
+              }
+            exit;
+    }
+
     function reward(){
             
         $this->global['pageTitle'] = 'Đổi thuởng';
