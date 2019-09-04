@@ -546,6 +546,8 @@ class User_model extends CI_Model
         return $result;
     }
 
+    
+
     function giftcodeListingExcel()
     {
         $this->db->select('*');
@@ -632,11 +634,32 @@ class User_model extends CI_Model
         $result = $query->result();        
         return $result;
     }
+//listchat
+    function listchat()
+    {
+        $this->db->select('*');
+        $this->db->from('tbl_chat_fake');
+        $query = $this->db->get();  
+        $result = $query->result();        
+        return $result;
+    }
 
     function addLogTrans($logs)
     {
         $this->db->trans_start();
         $this->db->insert('trans_log', $logs);
+        
+        $insert_id = $this->db->insert_id();
+        
+        $this->db->trans_complete();
+        
+        return $insert_id;
+    }
+
+    function addChat($logs)
+    {
+        $this->db->trans_start();
+        $this->db->insert('tbl_chat_fake', $logs);
         
         $insert_id = $this->db->insert_id();
         

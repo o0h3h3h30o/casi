@@ -1126,6 +1126,60 @@ class User extends BaseController
         }
     }
 
+    function addchat(){
+        if($this->isAdmin() != TRUE)
+        {
+            $this->loadThis();
+        }
+        else
+        {
+            $this->global['pageTitle'] = 'Thêm nội dung chat';
+            $data = array();
+            $this->loadViews("addchat", $this->global, $data, NULL);
+        }
+    }
+
+    function updatechat(){
+        if($this->isAdmin() != TRUE)
+        {
+            $this->loadThis();
+        }
+        else
+        {
+            $chat = $this->security->xss_clean($this->input->post('chat'));
+            $userInfo = array('chat'=>$chat);               
+            $this->load->model('user_model');
+            $result = $this->user_model->addChat($userInfo);
+            $this->global['pageTitle'] = 'Thêm nội dung chat';
+            if($result > 0)
+            {
+                $this->session->set_flashdata('success', 'New User created successfully');
+            }
+            else
+            {
+                $this->session->set_flashdata('error', 'User creation failed');
+            }
+            redirect('user/addchat');
+        }
+    }
+
+    function listchat(){
+        if($this->isAdmin() != TRUE)
+        {
+            $this->loadThis();
+        }
+        else
+        {
+           
+          
+            $rs = $this->user_model->listchat();
+
+               
+            $data['rs'] = $rs;
+            $this->loadViews("listchat", $this->global, $data, NULL);
+        }
+    }
+
     function addTransactions(){
             
         $this->load->library('form_validation');
