@@ -28,16 +28,14 @@
                     </div><!-- /.box-header -->
                     <!-- form start -->
                     
-                    <form role="form" action="<?php echo base_url() ?>user/uploadgiftcode" method="post" id="editUser" role="form">
+                    <form role="form" action="<?php echo base_url() ?>user/addreward" method="post" id="editUser" role="form">
                         <div class="box-body">
                         	<select name="product_id" class="form-control"> 
  
 
 
-                        	<?php foreach ($rs as $key => $value) { ?>
-                        		
-                        	 <option  value="<?php echo $value->gold; ?>" style="background-image:url(<?php echo base_url() ?>assets/images/<?php echo $value->image; ?>);"><?php echo $value->name; ?> - Giá trị: <?php echo number_format($value->gold); ?> Gold</option>
-                            
+                        	<?php foreach ($rs as $key => $value) { ?>	
+                        	 <option  value="<?php echo $value->id; ?>" ><?php echo $value->loaithe; ?> - Giá trị: <?php echo number_format($value->gold); ?> Gold</option>
                              <?php } ?>  
                              </select> 
                         </div>

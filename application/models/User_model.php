@@ -552,7 +552,7 @@ class User_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('gift_code');
-        $this->db->where('status',0);     
+        $this->db->where('status',1);     
         $this->db->order_by('id', 'DESC');       
         $query = $this->db->get();
         
